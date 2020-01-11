@@ -59,3 +59,4 @@ inventories e.g., from cloud providers like OpenStack, GCP, etc.
 # Todo
 
 * Add support for a "-i/--inventory" command line argument.
+* Pad the hostnames with whitespace to align and separate the groups.
