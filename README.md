@@ -41,7 +41,7 @@ e.localdomain.com
 f.localdomain.com
 ```
 
-aft prints the following:
+afi prints the following:
 
 ```
 % afi 
@@ -53,7 +53,7 @@ e.localdomain.com backend cache eastcoast
 f.localdomain.com backend cache westcoast
 ```
 
-aft is useful when working with large, especially dynamically generated,
+afi is useful when working with large, especially dynamically generated,
 inventories e.g., from cloud providers like OpenStack, GCP, etc.
 
 # Todo
