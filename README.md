@@ -5,8 +5,43 @@ their groups.
 
 # Example
 
-Give the inventory that's defined in the "inventory" directory, which is
-configured in the ansible.cfg file, aft prints the following:
+Given the following inventory:
+
+```
+[eastcoast]
+a.localdomain.com
+c.localdomain.com
+e.localdomain.com
+
+[westcoast]
+b.localdomain.com
+d.localdomain.com
+f.localdomain.com
+
+[apache]
+a.localdomain.com
+b.localdomain.com
+
+[database]
+c.localdomain.com
+d.localdomain.com
+
+[cache]
+e.localdomain.com
+f.localdomain.com
+
+[frontend]
+a.localdomain.com
+b.localdomain.com
+
+[backend]
+c.localdomain.com
+d.localdomain.com
+e.localdomain.com
+f.localdomain.com
+```
+
+aft prints the following:
 
 ```
 % afi 
@@ -17,6 +52,9 @@ d.localdomain.com backend database westcoast
 e.localdomain.com backend cache eastcoast
 f.localdomain.com backend cache westcoast
 ```
+
+aft is useful when working with large, especially dynamically generated,
+inventories e.g., from cloud providers like OpenStack, GCP, etc.
 
 # Todo
 
