@@ -1,28 +1,42 @@
 #!/usr/bin/env python3
 
-import ansible.config.manager
-import ansible.parsing.dataloader
-import ansible.inventory.manager
+import argparse
 
-configuration = ansible.config.manager.ConfigManager()
-dataloader = ansible.parsing.dataloader.DataLoader()
+from ansible.config.manager import ConfigManager
+from ansible.parsing.dataloader import DataLoader
+from ansible.inventory.manager import InventoryManager
 
-sources = configuration.data.get_setting("DEFAULT_HOST_LIST").value
-inventory = ansible.inventory.manager.InventoryManager(loader=dataloader, sources=sources)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--inventory",
+        help="specify the host path or comma separated host list")
+    args = parser.parse_args()
 
-groups = inventory.get_groups_dict()
+    if args.inventory:
+        sources = args.inventory.split(",")
+    else:
+        configmanager = ConfigManager()
+        sources = configmanager.data.get_setting("DEFAULT_HOST_LIST").value
 
-hosts = {}
-for group in groups:
-    if group == "all":
-       continue
-    for hostname in groups[group]:
-        if hostname in hosts:
-            if not group in hosts[hostname]:
-                hosts[hostname].append(group)
-        else:
-            hosts[hostname] = [group]
+    dataloader = DataLoader()
+    inventory = InventoryManager(loader=dataloader, sources=sources)
 
-for hostname in sorted(hosts.keys()):
-    groups = sorted(hosts[hostname])
-    print("%s %s" % (hostname, " ".join(groups)))
+    groups = inventory.get_groups_dict()
+
+    hosts = {}
+    for group in groups:
+        if group == "all":
+           continue
+        for hostname in groups[group]:
+            if hostname in hosts:
+                if not group in hosts[hostname]:
+                    hosts[hostname].append(group)
+            else:
+                hosts[hostname] = [group]
+
+    for hostname in sorted(hosts.keys()):
+        groups = sorted(hosts[hostname])
+        print("%s %s" % (hostname, " ".join(groups)))
+
+if __name__ == "__main__":
+    main()
