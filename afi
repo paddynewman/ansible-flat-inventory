@@ -8,6 +8,7 @@ from ansible.inventory.manager import InventoryManager
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument("pattern", default="all", nargs="?", help="host pattern")
     parser.add_argument("-i", "--inventory",
         help="specify the host path or comma separated host list")
     args = parser.parse_args()
@@ -21,22 +22,24 @@ def main():
     dataloader = DataLoader()
     inventory = InventoryManager(loader=dataloader, sources=sources)
 
-    groups = inventory.get_groups_dict()
-
     hosts = {}
-    for group in groups:
-        if group == "all":
-           continue
-        for hostname in groups[group]:
+    for host in inventory.get_hosts(pattern=args.pattern):
+        hostname = str(host)
+        groups = host.get_groups()
+        for group in groups:
+            groupname = str(group)
+            if groupname == "all":
+                continue
             if hostname in hosts:
-                if not group in hosts[hostname]:
-                    hosts[hostname].append(group)
+                if not groupname in hosts[hostname]:
+                    hosts[hostname].append(groupname)
             else:
-                hosts[hostname] = [group]
+                hosts[hostname] = [groupname]
 
     for hostname in sorted(hosts.keys()):
         groups = sorted(hosts[hostname])
         print("%s %s" % (hostname, " ".join(groups)))
+
 
 if __name__ == "__main__":
     main()
